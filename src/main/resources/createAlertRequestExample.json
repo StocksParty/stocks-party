@@ -1,0 +1,5 @@
+{
+  "stockSymbol": "AAPL",
+  "targetPrice": 150.00,
+  "userEmail": "user@example.com"
+}

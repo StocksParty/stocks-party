@@ -1,0 +1,52 @@
+name: Deploy to AWS Lambda
+
+# Trigger the workflow when code is pushed to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up JDK 21 for the build
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Step 3: Build the project using Maven
+      - name: Build with Maven
+        run: mvn clean package
+
+      # Step 4: Install AWS CLI
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      # Step 5: Zip the JAR file
+      - name: Zip the JAR file
+        run: zip -j lambda-package.zip target/project-0.0.1-SNAPSHOT.jar
+
+      # Step 6: Deploy to AWS Lambda
+      - name: Deploy to AWS Lambda
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'us-east-1'
+        run: |
+          FUNCTION_NAME="StockPriceCheckerLambda"
+          
+          # Update the Lambda function with the new code
+          aws lambda update-function-code \
+            --function-name $FUNCTION_NAME \
+            --zip-file fileb://lambda-package.zip \
+            --region $AWS_REGION

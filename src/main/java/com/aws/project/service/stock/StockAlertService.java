@@ -5,9 +5,11 @@ import com.aws.project.DTO.StockPriceResponse;
 import com.aws.project.service.DynamoDbService;
 import com.aws.project.service.SnsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,28 +32,39 @@ public class StockAlertService {
         dynamoDbService.saveAlert(alertRequest.getStockSymbol(), alertRequest.getTargetPrice(), alertRequest.getUserEmail());
     }
 
+    /**
+     * Returns a list full of stock alerts based on the email provided.
+     *
+     * @param email Request containing user email.
+     */
+    public List<Map<String, Object>> getAllAlertsForEmail(String email) {
+        return dynamoDbService.getAllAlertsByEmail(email);
+    }
+
 
     /**
+     * Will run automatically twice a day
      * Checks the current stock price against the user's target price and sends a notification if applicable.
-     *
-     * @param symbol Stock symbol.
-     * @param email  User's email.
      */
-    public void checkStockPriceAndNotify(String symbol, String email) {
-        Map<String, AttributeValue> alert = dynamoDbService.getAlert(symbol, email);
-        if (alert == null) {
-            throw new RuntimeException("No alert found for the given stock symbol and email.");
-        }
+    @Scheduled(cron = "0 0 8,20 * * *")
+    public void checkAllAlerts() {
+        // Fetch all alerts from DynamoDB
+        List<Map<String, AttributeValue>> alerts = dynamoDbService.getAllAlerts();
 
-        double targetPrice = Double.parseDouble(alert.get("targetPrice").n());
+        for (Map<String, AttributeValue> alert : alerts) {
+            // Convert AttributeValue to regular String and Double
+            String symbol = alert.get("symbol").s();
+            double targetPrice = Double.parseDouble(alert.get("targetPrice").n());
+            String email = alert.get("email").s();
 
-        // Pass the symbol along with default interval and outputsize to get the stock price
-        StockPriceResponse stockPriceResponse = stockPriceService.getCurrentStockPrice(symbol, "5min", "compact");
-        double currentPrice = stockPriceResponse.getCurrentPrice();
+            // Extract the current price from the StockPriceResponse
+            double currentPrice = stockPriceService.getLatestPrice(symbol);
 
-        if (currentPrice >= targetPrice) {
-            String message = String.format("Stock %s has reached your target price of $%.2f. Current price: $%.2f", symbol, targetPrice, currentPrice);
-            snsService.sendEmailNotification(message);
+            // Compare the current price with the target price
+            if (currentPrice >= targetPrice) {
+                // Send notification to the user
+                snsService.sendPriceAlert(email, symbol, currentPrice);
+            }
         }
     }
 

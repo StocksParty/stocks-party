@@ -54,6 +54,16 @@ public class StockPriceService {
     }
 
     /**
+     * Gets the latest price for the stock symbol
+     * @param symbol stock symbol
+     * @return latest price
+     */
+    public double getLatestPrice(String symbol) {
+        StockPriceResponse stockPriceResponse = getCurrentStockPrice(symbol, "1min", "compact");
+        return stockPriceResponse.getCurrentPrice();
+    }
+
+    /**
      * Returns the provided value or a default value if the provided value is null.
      */
     private String getOrDefault(String value, String defaultValue) {

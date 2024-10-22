@@ -12,18 +12,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HistoricalStockPrice {
 
-    // The timestamp for this stock data point (e.g., "2024-10-10 15:30:00")
+    // The timestamp
     private String timestamp;
 
-    // The opening price at the given timestamp
+    // The opening price
     private double openPrice;
 
-    // The highest price at the given timestamp
+    // The highest price
     private double highPrice;
 
-    // The lowest price at the given timestamp
+    // The lowest price
     private double lowPrice;
 
-    // The closing price at the given timestamp
+    // The closing price
     private double closePrice;
 }

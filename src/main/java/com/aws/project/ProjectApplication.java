@@ -12,9 +12,4 @@ public class ProjectApplication {
 		SpringApplication.run(ProjectApplication.class, args);
 		System.out.println("Hello, AWS!");
 	}
-
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
 }

@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO representing the stock alert request.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

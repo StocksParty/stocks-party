@@ -1,7 +1,9 @@
 package com.aws.project.service;
 
+import com.aws.project.config.AppConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
@@ -11,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Import(AppConfig.class)
 public class DynamoDbService {
 
     private final DynamoDbClient dynamoDbClient;

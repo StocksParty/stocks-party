@@ -13,7 +13,7 @@ jobs:
     steps:
       # Step 1: Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Step 2: Set up JDK 21 for the build
       - name: Set up JDK 21
@@ -22,8 +22,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # Step 3: Build the project using Maven
+      # Step 3: Build and package the project using Maven
       - name: Build with Maven
+        run: mvn clean install
+
+      - name: Package with Maven
         run: mvn clean package
 
       # Step 4: Install AWS CLI
@@ -32,21 +35,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y awscli
 
-      # Step 5: Zip the JAR file
-      - name: Zip the JAR file
-        run: zip -j lambda-package.zip target/project-0.0.1-SNAPSHOT.jar
 
-      # Step 6: Deploy to AWS Lambda
+      # Step 5: Deploy to AWS Lambda
       - name: Deploy to AWS Lambda
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'us-east-1'
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
         run: |
           FUNCTION_NAME="StockPriceCheckerLambda"
           
           # Update the Lambda function with the new code
           aws lambda update-function-code \
             --function-name $FUNCTION_NAME \
-            --zip-file fileb://lambda-package.zip \
+            --zip-file fileb://target/project-0.0.1-SNAPSHOT.jar \
             --region $AWS_REGION

@@ -1,9 +1,8 @@
 package com.aws.project.service.stock;
 
 import com.aws.project.DTO.StockAlertRequest;
-import com.aws.project.DTO.StockPriceResponse;
 import com.aws.project.service.DynamoDbService;
-import com.aws.project.service.SnsService;
+import com.aws.project.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ import java.util.Map;
 public class StockAlertService {
 
     private final DynamoDbService dynamoDbService;
-    private final SnsService snsService;
+    private final NotificationService notificationService;
     private final StockPriceService stockPriceService;
 
     /**
@@ -30,6 +29,7 @@ public class StockAlertService {
      */
     public void createAlert(StockAlertRequest alertRequest) {
         dynamoDbService.saveAlert(alertRequest.getStockSymbol(), alertRequest.getTargetPrice(), alertRequest.getUserEmail());
+        notificationService.subscribeEmailToTopic(alertRequest.getUserEmail());
     }
 
     /**
@@ -44,9 +44,10 @@ public class StockAlertService {
 
     /**
      * Will run automatically twice a day
+     * 10am and 3pm
      * Checks the current stock price against the user's target price and sends a notification if applicable.
      */
-    @Scheduled(cron = "0 0 8,20 * * *")
+    @Scheduled(cron = "0 0 10,15 * * *")
     public void checkAllAlerts() {
         // Fetch all alerts from DynamoDB
         List<Map<String, AttributeValue>> alerts = dynamoDbService.getAllAlerts();
@@ -56,6 +57,7 @@ public class StockAlertService {
             String symbol = alert.get("symbol").s();
             double targetPrice = Double.parseDouble(alert.get("targetPrice").n());
             String email = alert.get("email").s();
+            String phone = alert.get("phoneNumber").s();
 
             // Extract the current price from the StockPriceResponse
             double currentPrice = stockPriceService.getLatestPrice(symbol);
@@ -63,7 +65,13 @@ public class StockAlertService {
             // Compare the current price with the target price
             if (currentPrice >= targetPrice) {
                 // Send notification to the user
-                snsService.sendPriceAlert(email, symbol, currentPrice);
+                if (email !=null && !email.isEmpty()) {
+                    notificationService.sendPriceAlertBySNS(email, phone, symbol, currentPrice);
+                    notificationService.sendPriceAlertByEmail(email, symbol, currentPrice);
+                }
+                if (phone != null && !phone.isEmpty()) {
+                    notificationService.sendPriceAlertBySNS(email, phone, symbol, currentPrice);
+                }
             }
         }
     }

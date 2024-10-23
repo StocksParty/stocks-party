@@ -18,7 +18,7 @@ public class SnsServiceTest {
     private SnsClient snsClient;
 
     @InjectMocks
-    private SnsService snsService;
+    private NotificationService notificationService;
 
     @BeforeEach
     public void setUp() {

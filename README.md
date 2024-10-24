@@ -36,11 +36,11 @@ Fetches the current stock price for a specified stock symbol, interval, and outp
 #### Example Request:
 
 ```bash
-curl -X GET "http://localhost:8080/stocks/price"
+curl -X GET "https://0qcjw0wudl.execute-api.us-east-1.amazonaws.com/prod/stocks/price"
 
-curl -X GET "http://localhost:8080/stocks/price?symbol=AAPL&interval=5min&outputsize=compact"
+curl -X GET "https://0qcjw0wudl.execute-api.us-east-1.amazonaws.com/prod/stocks/price?symbol=PLTR&interval=60min&outputsize=full"
 
-curl -X POST http://localhost:8080/stocks/alert \
+curl -X POST "https://0qcjw0wudl.execute-api.us-east-1.amazonaws.com/prod/stocks/alert" \
   -H "Content-Type: application/json" \
   -d '{
     "symbol": "AAPL",
@@ -50,4 +50,4 @@ curl -X POST http://localhost:8080/stocks/alert \
 
 curl -X DELETE "http://localhost:8080/stocks/alert?symbol=AAPL&email=user@example.com"
 
-curl -X GET "http://localhost:8080/stocks/alert/check?symbol=AAPL&email=user@example.com"
+curl -X GET "https://0qcjw0wudl.execute-api.us-east-1.amazonaws.com/prod/stocks/alerts?email=test@test.com"

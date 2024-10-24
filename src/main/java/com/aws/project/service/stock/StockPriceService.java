@@ -27,6 +27,7 @@ public class StockPriceService {
     @Value("${stock.api.url}")
     private String apiUrl;
 
+
     /**
      * Fetches the current stock price for the given symbol, interval, and output size.
      * If any of these parameters are null, default values are applied.

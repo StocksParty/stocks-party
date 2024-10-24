@@ -18,7 +18,7 @@ public class SnsTestController {
 
     @GetMapping("/test")
     public ResponseEntity<String> testSns() {
-        notificationService.sendPriceAlertByEmail("test@example.com", "AAPL", 150.00);
+        notificationService.sendPriceAlertBySNS("test@example.com","99999999", "AAPL", 150.00);
         return ResponseEntity.ok("SNS Notification Sent");
     }
 }

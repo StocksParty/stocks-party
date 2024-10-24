@@ -67,7 +67,6 @@ public class StockAlertService {
                 // Send notification to the user
                 if (email !=null && !email.isEmpty()) {
                     notificationService.sendPriceAlertBySNS(email, phone, symbol, currentPrice);
-                    notificationService.sendPriceAlertByEmail(email, symbol, currentPrice);
                 }
                 if (phone != null && !phone.isEmpty()) {
                     notificationService.sendPriceAlertBySNS(email, phone, symbol, currentPrice);
@@ -75,7 +74,6 @@ public class StockAlertService {
             }
         }
     }
-
 
     /**
      * Deletes a stock price alert for a user.

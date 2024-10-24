@@ -5,7 +5,6 @@ import org.springframework.web.client.RestTemplate;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.sns.SnsClient;
 
 /**
@@ -38,13 +37,6 @@ public class AppConfig {
     @Bean
     public SnsClient snsClient() {
         return SnsClient.builder()
-                .region(Region.US_EAST_1)
-                .build();
-    }
-
-    @Bean
-    public SesClient sesClient() {
-        return SesClient.builder()
                 .region(Region.US_EAST_1)
                 .build();
     }

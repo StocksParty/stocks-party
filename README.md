@@ -4,6 +4,8 @@
 
 The Real-Time Stock Price Alert System is a serverless application designed to track stock prices and notify users via email when a stock reaches a specified target price. The application fetches real-time stock data from an external API, allows users to create and manage stock alerts, and sends notifications when the target price is met.
 
+[Not so much of a technical drawing](https://excalidraw.com/#json=zzAWr4R_lS1i3ilIqONxz,ot_156HmSKhoKm24K28Muw)
+
 ## Features
 
 - **Real-Time Stock Price Fetching**: Fetches current stock prices at specified intervals (e.g., 1min, 5min, etc.) using an external API.
@@ -13,7 +15,7 @@ The Real-Time Stock Price Alert System is a serverless application designed to t
 
 ## Tech Stack
 
-- **Java 17**
+- **Java 21**
 - **Spring Boot 3.3.x**
 - **AWS SDK (DynamoDB, SNS)** for database and notifications
 - **Lombok** for reducing boilerplate code

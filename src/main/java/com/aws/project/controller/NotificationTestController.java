@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class NotificationTestController {
 
-    private final StockPriceService stockPriceService;
     private final NotificationService notificationService;
 
     /**

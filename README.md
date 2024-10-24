@@ -15,7 +15,7 @@ The Real-Time Stock Price Alert System is a serverless application designed to t
 
 ## Tech Stack
 
-- **Java 17**
+- **Java 21**
 - **Spring Boot 3.3.x**
 - **AWS SDK (DynamoDB, SNS)** for database and notifications
 - **Lombok** for reducing boilerplate code

@@ -72,7 +72,7 @@ public class NotificationService {
             PublishRequest request = PublishRequest.builder()
                     .message(message)
                     .subject(subject)
-                    .phoneNumber(phone)
+//                    .phoneNumber(phone)
                     .topicArn(topicArn)
                     .build();
 
@@ -98,7 +98,7 @@ public class NotificationService {
             PublishRequest request = PublishRequest.builder()
                     .message(message)
                     .subject(subject)
-                    .phoneNumber(phone)
+//                    .phoneNumber(phone)
                     .topicArn(topicArn)
                     .build();
 

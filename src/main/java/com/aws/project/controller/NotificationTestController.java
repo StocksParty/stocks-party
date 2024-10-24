@@ -34,16 +34,16 @@ public class NotificationTestController {
             @RequestParam double targetPrice) {
 
         try {
-            // Fetch the current stock price for the given stock symbol
-            double currentPrice = stockPriceService.getLatestPrice(stockSymbol);
-
-            // Check if the current price is greater than or equal to the target price
+            // Hard Coded values for testing purpose
+            // Not wasting api calls for this test
+            email = "nicholasbotorog@gmail.com";
+            stockSymbol = "PLTR";
+            targetPrice = 42.83;
+            var currentPrice = 41.83;
             if (currentPrice >= targetPrice) {
-                // Send test notification
                 notificationService.sendPriceAlertBySNS(email, phone, stockSymbol, currentPrice);
                 return ResponseEntity.ok(new ApiResponse<>(true, "Notification sent.", true));
             } else {
-                // No notification sent because the target price was not met
                 notificationService.sendTestNotification(email, phone, stockSymbol, currentPrice);
                 return ResponseEntity.ok(new ApiResponse<>(false, "Notification not needed.", false));
             }
